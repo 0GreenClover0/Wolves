@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SheepManager : MonoBehaviour
 {
@@ -25,6 +26,11 @@ public class SheepManager : MonoBehaviour
         if (sheeps.Count == 0)
         {
             end.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
         }
     }
 

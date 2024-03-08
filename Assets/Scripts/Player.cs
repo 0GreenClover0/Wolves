@@ -11,14 +11,16 @@ public class Player : MonoBehaviour
     public GameObject lineStart;
 
     private GameObject currentLineStart;
-    private Renderer lineRenderer;
+    private List<GameObject> poles; // <---- polaki biedaki, specjalnie z malej
+    //wybacz mi wpisanie tych dwoch lineRendererow, ale nie wiem co robi ten pierwszy do konca to nie chcialem usuwac
+    private List<Renderer> poleRenderer;
     private LineRenderer lineRenderer2; // idk what the first one is for tbh
     private MaterialPropertyBlock lineMaterialPropertyBlock;
     private new Rigidbody rigidbody;
     private float horizontal;
     private float vertical;
 
-    private bool HasLine => currentLineStart != null;
+    private bool HasLine => poles.Count > 0;
 
     private LayerMask enemyLayer;
 
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
         lineRenderer2 = GetComponent<LineRenderer>();
+        poles = new List<GameObject>();
+        poleRenderer = new List<Renderer>();
     }
 
     private void FixedUpdate()
@@ -38,12 +42,35 @@ public class Player : MonoBehaviour
 
         if (HasLine)
         {
-            Ray ray = new Ray(transform.position, currentLineStart.transform.position - transform.position);
-            Debug.DrawRay(transform.position, currentLineStart.transform.position - transform.position, Color.red);
-            lineRenderer2.SetPositions(new Vector3[] { transform.position, currentLineStart.transform.position });
-            if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(currentLineStart.transform.position, transform.position), enemyLayer, QueryTriggerInteraction.Collide))
+            
+            Debug.DrawRay(transform.position, poles[0].transform.position - transform.position, Color.red);
+            Vector3[] lineVertices = new Vector3[poles.Count+1];
+            for(int i = 0; i < poles.Count; i++)
             {
-                Destroy(info.collider.gameObject);
+                lineVertices[i] = poles[i].transform.position;
+            }
+            lineVertices[poles.Count] = transform.position;
+            lineRenderer2.positionCount = poles.Count + 1;
+            lineRenderer2.SetPositions(lineVertices);
+            for(int i = 0; i < poles.Count; i++)
+            {
+                if (i == poles.Count - 1)
+                {
+                    Ray ray = new Ray(transform.position, poles[i].transform.position - this.transform.position);
+                    if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(poles[i].transform.position, transform.position), enemyLayer, QueryTriggerInteraction.Collide))
+                    {
+                        Destroy(info.collider.gameObject);
+                    }
+                }
+                else
+                {
+                    Ray ray = new Ray(poles[i+1].transform.position, poles[i].transform.position - poles[i + 1].transform.position);
+                    if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(poles[i].transform.position, poles[i+1].transform.position), enemyLayer, QueryTriggerInteraction.Collide))
+                    {
+                        Destroy(info.collider.gameObject);
+                    }
+                }
+
             }
         }
     }
@@ -55,7 +82,7 @@ public class Player : MonoBehaviour
 
         if (HasLine)
         {
-            Vector2 linePos = new Vector2(currentLineStart.transform.position.x, currentLineStart.transform.position.z);
+            Vector2 linePos = new Vector2(poles[poles.Count-1].transform.position.x, poles[poles.Count - 1].transform.position.z);
             Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
             if (Vector2.Distance(linePos, playerPos) > distanceToLinePickup)
             {
@@ -66,27 +93,31 @@ public class Player : MonoBehaviour
                 lineMaterialPropertyBlock.SetColor("_Color", Color.blue);
             }
 
-            lineRenderer.SetPropertyBlock(lineMaterialPropertyBlock);
+            poleRenderer[poleRenderer.Count-1].SetPropertyBlock(lineMaterialPropertyBlock);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (HasLine)
             {
-                Vector2 linePos = new Vector2(currentLineStart.transform.position.x, currentLineStart.transform.position.z);
+                Vector2 linePos = new Vector2(poles[poles.Count - 1].transform.position.x, poles[poles.Count-1].transform.position.z);
                 Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
                 Debug.Log(Vector2.Distance(linePos, playerPos));
                 if (Vector2.Distance(linePos, playerPos) > distanceToLinePickup)
                 {
+                    poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
+                    poleRenderer.Add(poles[poles.Count - 1].GetComponent<Renderer>());
                     return;
                 }
-                lineRenderer2.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
-                Destroy(currentLineStart);
+                lineRenderer2.positionCount = poles.Count;
+                Destroy(poles[poles.Count - 1]);
+                poles.RemoveAt(poles.Count - 1);
+                poleRenderer.RemoveAt(poleRenderer.Count - 1);
             }
             else
             {
-                currentLineStart = Instantiate(lineStart, transform.position, Quaternion.identity);
-                lineRenderer = currentLineStart.GetComponent<Renderer>();
+                poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
+                poleRenderer.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
         }
     }
