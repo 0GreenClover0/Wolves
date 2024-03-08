@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 
     private GameObject currentLineStart;
     private Renderer lineRenderer;
+    private LineRenderer lineRenderer2; // idk what the first one is for tbh
     private MaterialPropertyBlock lineMaterialPropertyBlock;
     private new Rigidbody rigidbody;
     private float horizontal;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
+        lineRenderer2 = GetComponent<LineRenderer>();
     }
 
     private void FixedUpdate()
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour
         {
             Ray ray = new Ray(transform.position, currentLineStart.transform.position - transform.position);
             Debug.DrawRay(transform.position, currentLineStart.transform.position - transform.position, Color.red);
+            lineRenderer2.SetPositions(new Vector3[] { transform.position, currentLineStart.transform.position });
             if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(currentLineStart.transform.position, transform.position), enemyLayer, QueryTriggerInteraction.Collide))
             {
                 Destroy(info.collider.gameObject);
@@ -77,7 +80,7 @@ public class Player : MonoBehaviour
                 {
                     return;
                 }
-
+                lineRenderer2.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
                 Destroy(currentLineStart);
             }
             else

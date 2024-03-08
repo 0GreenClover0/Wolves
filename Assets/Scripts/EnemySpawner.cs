@@ -8,7 +8,10 @@ public class EnemySpawner : MonoBehaviour
 
     public float delay = 0.0f;
 
+    [Header("Spawn Time")]
+    [SerializeField]
     private float timeToSpawnLow = 15f;
+    [SerializeField]
     private float timeToSpawnHigh = 30f;
 
     private static int enemyCount = 0;
