@@ -37,6 +37,7 @@ public class SheepManager : MonoBehaviour
     public static void KillSheep(Sheep sheep)
     {
         instance.sheeps.Remove(sheep);
-        Destroy(sheep);
+        Destroy(sheep.gameObject);
     }
+
 }

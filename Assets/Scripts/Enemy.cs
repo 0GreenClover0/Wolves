@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 2f;
+    private float speed = 1f;
 
     private float distanceToKill = 0.75f;
 
