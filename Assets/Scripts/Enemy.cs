@@ -1,28 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    private float speed = 1f;
+    public float distanceToKill = 1.5f;
 
-    private float distanceToKill = 0.75f;
+    private NavMeshAgent agent;
+
+    private void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     private void Update()
     {
         if (SheepManager.instance.sheeps.Count == 0)
             return;
 
-        Sheep closestSheep = SheepManager.instance.sheeps.Aggregate((c, d) => Vector3.Distance(c.transform.position, transform.position) < Vector3.Distance(d.transform.position, transform.position) ? c : d);
+        Sheep closestSheep = SheepManager.instance.sheeps[0];
+        float shortestDistance = Vector3.Distance(transform.position, closestSheep.transform.position);
 
-        Vector3 enemyPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
-        Vector3 sheepPos = new Vector3(closestSheep.transform.position.x, 0.0f, closestSheep.transform.position.z);
-        Vector3 newPos = Vector3.MoveTowards(enemyPos, sheepPos, Time.deltaTime * speed);
-        newPos.y = transform.position.y;
-        transform.position = newPos;
+        // Find the closest sheep
+        for (int i = 1; i < SheepManager.instance.sheeps.Count; i++)
+        {
+            float distanceToSheep = Vector3.Distance(transform.position, SheepManager.instance.sheeps[i].transform.position);
+            if (distanceToSheep < shortestDistance)
+            {
+                closestSheep = SheepManager.instance.sheeps[i];
+                shortestDistance = distanceToSheep;
+            }
+        }
 
-        if (Vector3.Distance(enemyPos, sheepPos) < distanceToKill)
+        // Move towards the closest sheep using NavMesh
+        Vector3 targetPosition = new Vector3(closestSheep.transform.position.x, transform.position.y, closestSheep.transform.position.z);
+        agent.SetDestination(targetPosition);
+
+        // Check if the enemy is close enough to the sheep to kill it
+        if (shortestDistance < distanceToKill)
             SheepManager.KillSheep(closestSheep);
     }
 }
