@@ -7,6 +7,8 @@ using UnityEngine.Assertions;
 
 public class EnemySpawnsManager : MonoBehaviour
 {
+    public bool deprecatedRandomMode = false;
+
     public event Action OnDone;
 
     [SerializeField] private List<Spawner> spawners = new List<Spawner>();
@@ -21,6 +23,12 @@ public class EnemySpawnsManager : MonoBehaviour
     {
         enemySpawners = GetComponentsInChildren<EnemySpawner>(true).ToList();
 
+        if (deprecatedRandomMode)
+        {
+            Debug.LogWarning("Deprecated mode active.");
+            return;
+        }
+
         Assert.AreEqual(enemySpawners.Count, spawners.Count);
 
         randomOffset = UnityEngine.Random.Range(0, 4);
@@ -30,6 +38,24 @@ public class EnemySpawnsManager : MonoBehaviour
     {
         for (int i = 0; i < enemySpawners.Count; ++i)
         {
+            if (deprecatedRandomMode)
+            {
+                List<float> randomEnemySpawns = new List<float>();
+                float timeLow = 5.0f;
+                float timeHigh = 15.0f;
+                float time = 0.0f;
+
+                for (int k = 0; k < 50; k++)
+                {
+                    float random = UnityEngine.Random.Range(timeLow, timeHigh);
+                    time += random;
+                    randomEnemySpawns.Add(time);
+                }
+
+                enemySpawners[i].spawnTimes = randomEnemySpawns;
+                continue;
+            }
+
             enemySpawners[i].spawnTimes = spawners[(i + randomOffset) % spawners.Count].spawnTimes;
         }
     }
