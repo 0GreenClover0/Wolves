@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     public float runSpeed = 20.0f;
     public float distanceToLinePickup = 5.0f;
+    public int maxPolesCount = 1;
 
     [Header("References")]
     public GameObject lineStart;
 
     private GameObject currentLineStart;
     private List<GameObject> poles; // <---- polaki biedaki, specjalnie z malej
-    //wybacz mi wpisanie tych dwoch lineRendererow, ale nie wiem co robi ten pierwszy do konca to nie chcialem usuwac
-    private List<Renderer> poleRenderer;
-    private LineRenderer lineRenderer2; // idk what the first one is for tbh
+
+    private List<Renderer> poleRenderers;
+    private LineRenderer lineRenderer;
     private MaterialPropertyBlock lineMaterialPropertyBlock;
     private new Rigidbody rigidbody;
     private float horizontal;
@@ -31,9 +33,9 @@ public class Player : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
-        lineRenderer2 = GetComponent<LineRenderer>();
+        lineRenderer = GetComponent<LineRenderer>();
         poles = new List<GameObject>();
-        poleRenderer = new List<Renderer>();
+        poleRenderers = new List<Renderer>();
     }
 
     private void FixedUpdate()
@@ -42,16 +44,14 @@ public class Player : MonoBehaviour
 
         if (HasLine)
         {
-            
-            Debug.DrawRay(transform.position, poles[0].transform.position - transform.position, Color.red);
             Vector3[] lineVertices = new Vector3[poles.Count+1];
             for(int i = 0; i < poles.Count; i++)
             {
                 lineVertices[i] = poles[i].transform.position;
             }
             lineVertices[poles.Count] = transform.position;
-            lineRenderer2.positionCount = poles.Count + 1;
-            lineRenderer2.SetPositions(lineVertices);
+            lineRenderer.positionCount = poles.Count + 1;
+            lineRenderer.SetPositions(lineVertices);
             for(int i = 0; i < poles.Count; i++)
             {
                 if (i == poles.Count - 1)
@@ -80,6 +80,9 @@ public class Player : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+
         if (HasLine)
         {
             Vector2 linePos = new Vector2(poles[poles.Count-1].transform.position.x, poles[poles.Count - 1].transform.position.z);
@@ -93,7 +96,7 @@ public class Player : MonoBehaviour
                 lineMaterialPropertyBlock.SetColor("_Color", Color.blue);
             }
 
-            poleRenderer[poleRenderer.Count-1].SetPropertyBlock(lineMaterialPropertyBlock);
+            poleRenderers[poleRenderers.Count-1].SetPropertyBlock(lineMaterialPropertyBlock);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -102,23 +105,45 @@ public class Player : MonoBehaviour
             {
                 Vector2 linePos = new Vector2(poles[poles.Count - 1].transform.position.x, poles[poles.Count-1].transform.position.z);
                 Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
-                Debug.Log(Vector2.Distance(linePos, playerPos));
+
                 if (Vector2.Distance(linePos, playerPos) > distanceToLinePickup)
                 {
+                    if (poles.Count >= maxPolesCount)
+                        return;
+
                     poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
-                    poleRenderer.Add(poles[poles.Count - 1].GetComponent<Renderer>());
+                    poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
                     return;
                 }
-                lineRenderer2.positionCount = poles.Count;
-                Destroy(poles[poles.Count - 1]);
-                poles.RemoveAt(poles.Count - 1);
-                poleRenderer.RemoveAt(poleRenderer.Count - 1);
+
+                DestroyLastPole();
             }
             else
             {
                 poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
-                poleRenderer.Add(poles[poles.Count - 1].GetComponent<Renderer>());
+                poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
         }
+    }
+
+    public void DestroyAllPoles()
+    {
+        lineRenderer.positionCount = 1;
+
+        for (int i = poles.Count - 1; i >= 0; --i)
+        {
+            Destroy(poles[i]);
+        }
+
+        poles.Clear();
+        poleRenderers.Clear();
+    }
+
+    private void DestroyLastPole()
+    {
+        lineRenderer.positionCount = poles.Count;
+        Destroy(poles[poles.Count - 1]);
+        poles.RemoveAt(poles.Count - 1);
+        poleRenderers.RemoveAt(poleRenderers.Count - 1);
     }
 }
