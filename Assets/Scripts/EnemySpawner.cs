@@ -6,41 +6,24 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
 
-    public float delay = 0.0f;
-
-    [Header("Spawn Time")]
-    [SerializeField]
-    private float timeToSpawnLow = 15f;
-    [SerializeField]
-    private float timeToSpawnHigh = 30f;
-
-    private static int enemyCount = 0;
+    [HideInInspector] public List<GameObject> enemies = new List<GameObject>();
+    [HideInInspector] public List<float> spawnTimes = new List<float>();
+    [HideInInspector] public bool isDone = false;
 
     private float currentTime = 0.0f;
-
-    private float timeToSpawn = 0.0f;
-
-    private void Awake()
-    {
-        timeToSpawn = Random.Range(timeToSpawnLow, timeToSpawnHigh);
-    }
+    private int lastSpawned = 0;
 
     private void Update()
     {
-        currentTime += Time.deltaTime;
-
-        if (delay > 0.0f)
+        if (lastSpawned >= spawnTimes.Count)
         {
-            if (currentTime > delay)
-            {
-                delay = 0.0f;
-                Spawn();
-            }
-
+            isDone = true;
             return;
         }
 
-        if (currentTime < timeToSpawn)
+        currentTime += Time.deltaTime;
+
+        if (currentTime < spawnTimes[lastSpawned])
             return;
 
         Spawn();
@@ -48,8 +31,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Spawn()
     {
-        Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-        currentTime = 0.0f;
-        timeToSpawn = Random.Range(timeToSpawnLow, timeToSpawnHigh);
+        enemies.Add(Instantiate(enemyPrefab, transform.position, Quaternion.identity));
+        lastSpawned++;
     }
 }
