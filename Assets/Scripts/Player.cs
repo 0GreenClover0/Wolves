@@ -78,6 +78,7 @@ public class Player : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(pole.transform.position, pole.nextPole.transform.position), enemyLayer, QueryTriggerInteraction.Collide))
                 {
                     Destroy(info.collider.gameObject);
+                    DestroyFreestandingPoles(disattachedStartingPoles[i]);
                 }
 
                 pole = pole.nextPole;
@@ -201,6 +202,18 @@ public class Player : MonoBehaviour
                 poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
                 poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
+        }
+    }
+
+    private void DestroyFreestandingPoles(Pole pole)
+    {
+        disattachedStartingPoles.Remove(pole);
+
+        while (pole != null)
+        {
+            Pole nextPole = pole.nextPole;
+            Destroy(pole.gameObject);
+            pole = nextPole;
         }
     }
 
