@@ -9,8 +9,11 @@ public class Sheep : MonoBehaviour
     public float minWaitTime = 0.5f;
     public float maxWaitTime = 5f;
     public float centerThreshold = 10f; // Distance threshold from the center to trigger going back
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
     private Vector3 centerPosition;
+
+
+    public bool doShit = true;
 
     // Start is called before the first frame update
     void Start()
@@ -23,21 +26,24 @@ public class Sheep : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Ensure that the sheep stays at a constant height
-        Vector3 position = transform.position;
-        position.y = 1;
-        transform.position = position;
-
-        // Check distance from center
-        if (Vector3.Distance(transform.position, centerPosition) > centerThreshold)
+        if (doShit)
         {
-            GoBackToCenter();
+            // Ensure that the sheep stays at a constant height
+            Vector3 position = transform.position;
+            position.y = 1;
+            transform.position = position;
+
+            // Check distance from center
+            if (Vector3.Distance(transform.position, centerPosition) > centerThreshold)
+            {
+                GoBackToCenter();
+            }
         }
     }
 
     private IEnumerator MoveToRandomLocation()
     {
-        while (true)
+        while (doShit)
         {
             // Calculate random direction within maxDistance
             Vector3 randomDirection = Random.insideUnitCircle.normalized * Random.Range(0, maxDistance);
@@ -73,4 +79,7 @@ public class Sheep : MonoBehaviour
         Vector3 v3 = centerPosition + new Vector3(v.x, 1, v.y);
         agent.SetDestination(v3);
     }
+
+
+
 }
