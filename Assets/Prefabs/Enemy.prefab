@@ -119,7 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299ea1339dea26a46bed3251c19a34e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToKill: 1
+  distanceToKill: 2
+  distanceToGrab: 1.5
 --- !u!195 &4009947234958674487
 NavMeshAgent:
   m_ObjectHideFlags: 0
