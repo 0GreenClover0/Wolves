@@ -2233,8 +2233,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 4
-  distanceToLinePickup: 1.25
-  maxPolesCount: 1
+  distanceToLinePickup: 1.5
+  maxPolesCount: 2
+  maxWireLength: 5
   lineStart: {fileID: 3800795418981816800, guid: 992872b1e1271b3499ba6c496ecb1fde, type: 3}
 --- !u!54 &1281275708
 Rigidbody:

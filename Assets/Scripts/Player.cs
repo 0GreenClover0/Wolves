@@ -16,9 +16,11 @@ public class Player : MonoBehaviour
     public GameObject lineStart;
 
     private GameObject currentLineStart;
-    private List<GameObject> poles; // <---- polaki biedaki, specjalnie z malej
+    private List<GameObject> poles = new List<GameObject>();
 
-    private List<Renderer> poleRenderers;
+    private List<Pole> disattachedStartingPoles = new List<Pole>();
+
+    private List<Renderer> poleRenderers = new List<Renderer>();
     private LineRenderer lineRenderer;
     private MaterialPropertyBlock lineMaterialPropertyBlock;
     private new Rigidbody rigidbody;
@@ -29,7 +31,7 @@ public class Player : MonoBehaviour
 
     private LayerMask enemyLayer;
 
-    private void Start ()
+    private void Start()
     {
         rigidbody = GetComponent<Rigidbody>(); 
 
@@ -37,13 +39,78 @@ public class Player : MonoBehaviour
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
         lineRenderer = GetComponent<LineRenderer>();
-        poles = new List<GameObject>();
-        poleRenderers = new List<Renderer>();
     }
 
     private void FixedUpdate()
     {
+        ClampPlayerDistanceFromPole();
+
+        for (int i = 0; i < disattachedStartingPoles.Count; ++i)
+        {
+            Pole pole = disattachedStartingPoles[i];
+            List<Vector3> disattachedLineVertices = new List<Vector3>();
+            while (pole != null)
+            {
+                disattachedLineVertices.Add(pole.transform.position);
+
+                if (pole.nextPole == null)
+                {
+                    pole = null;
+                    break;
+                }
+
+                pole = pole.nextPole;
+            }
+
+            disattachedStartingPoles[i].lineRenderer.positionCount = disattachedLineVertices.Count;
+            disattachedStartingPoles[i].lineRenderer.SetPositions(disattachedLineVertices.ToArray());
+        }
+
+        for (int i = 0; i < disattachedStartingPoles.Count; i++)
+        {
+            Pole pole = disattachedStartingPoles[i];
+            while (pole != null)
+            {
+                if (pole.nextPole == null)
+                    break;
+
+                Ray ray = new Ray(pole.nextPole.transform.position, pole.transform.position - pole.nextPole.transform.position);
+                if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(pole.transform.position, pole.nextPole.transform.position), enemyLayer, QueryTriggerInteraction.Collide))
+                {
+                    Destroy(info.collider.gameObject);
+                }
+
+                pole = pole.nextPole;
+            }
+        }
+
+        if (HasLine)
+        {
+            Vector3[] lineVertices = new Vector3[poles.Count+1];
+            for (int i = 0; i < poles.Count; i++)
+            {
+                lineVertices[i] = poles[i].transform.position;
+            }
+
+            lineVertices[poles.Count] = transform.position;
+            lineRenderer.positionCount = poles.Count + 1;
+            lineRenderer.SetPositions(lineVertices);
+
+            for (int i = 0; i < poles.Count - 1; i++)
+            {
+                Ray ray = new Ray(poles[i+1].transform.position, poles[i].transform.position - poles[i + 1].transform.position);
+                if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(poles[i].transform.position, poles[i+1].transform.position), enemyLayer, QueryTriggerInteraction.Collide))
+                {
+                    Destroy(info.collider.gameObject);
+                }
+            }
+        }
+    }
+
+    private void ClampPlayerDistanceFromPole()
+    {
         CalculateUsedWireLength();
+
         if (usedWireLength < maxWireLength)
         {
             rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
@@ -65,38 +132,6 @@ public class Player : MonoBehaviour
             }
 
             rigidbody.velocity = desiredVelocity;
-        }
-
-        if (HasLine)
-        {
-            Vector3[] lineVertices = new Vector3[poles.Count+1];
-            for(int i = 0; i < poles.Count; i++)
-            {
-                lineVertices[i] = poles[i].transform.position;
-            }
-            lineVertices[poles.Count] = transform.position;
-            lineRenderer.positionCount = poles.Count + 1;
-            lineRenderer.SetPositions(lineVertices);
-            for(int i = 0; i < poles.Count; i++)
-            {
-                if (i == poles.Count - 1)
-                {
-                    Ray ray = new Ray(transform.position, poles[i].transform.position - this.transform.position);
-                    if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(poles[i].transform.position, transform.position), enemyLayer, QueryTriggerInteraction.Collide))
-                    {
-                        Destroy(info.collider.gameObject);
-                    }
-                }
-                else
-                {
-                    Ray ray = new Ray(poles[i+1].transform.position, poles[i].transform.position - poles[i + 1].transform.position);
-                    if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(poles[i].transform.position, poles[i+1].transform.position), enemyLayer, QueryTriggerInteraction.Collide))
-                    {
-                        Destroy(info.collider.gameObject);
-                    }
-                }
-
-            }
         }
     }
 
@@ -122,6 +157,22 @@ public class Player : MonoBehaviour
             }
 
             poleRenderers[poleRenderers.Count-1].SetPropertyBlock(lineMaterialPropertyBlock);
+
+            // Cut
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (poles.Count <= 1)
+                    return;
+
+                lineRenderer.positionCount = 1;
+
+                Pole firstPole = poles[0].GetComponent<Pole>();
+                firstPole.lineRenderer.enabled = true;
+                disattachedStartingPoles.Add(firstPole);
+
+                poles.Clear();
+                poleRenderers.Clear();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -136,7 +187,9 @@ public class Player : MonoBehaviour
                     if (poles.Count >= maxPolesCount)
                         return;
 
+                    Pole previousPole = poles[poles.Count - 1].GetComponent<Pole>();
                     poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
+                    previousPole.nextPole = poles[poles.Count - 1].GetComponent<Pole>();
                     poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
                     return;
                 }
