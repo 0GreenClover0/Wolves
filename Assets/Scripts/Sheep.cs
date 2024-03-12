@@ -11,7 +11,7 @@ public class Sheep : MonoBehaviour
     public float centerThreshold = 10f; // Distance threshold from the center to trigger going back
     public NavMeshAgent agent;
     private Vector3 centerPosition;
-
+    private BoxCollider boxCollider;
 
     public bool doShit = true;
 
@@ -21,6 +21,7 @@ public class Sheep : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         centerPosition = new Vector3(0, 1, 0);
         StartCoroutine(MoveToRandomLocation());
+        boxCollider = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -78,6 +79,19 @@ public class Sheep : MonoBehaviour
         Vector2 v = Random.insideUnitCircle.normalized;
         Vector3 v3 = centerPosition + new Vector3(v.x, 1, v.y);
         agent.SetDestination(v3);
+    }
+
+    public void DeactivateSheep()
+    {
+        agent.enabled = false;
+        doShit = false;
+        boxCollider.enabled = false;
+    }
+    public void ReactivateSheep() {
+        agent.enabled = true;
+        doShit = true;
+        boxCollider.enabled = true;
+        GoBackToCenter();
     }
 
 
