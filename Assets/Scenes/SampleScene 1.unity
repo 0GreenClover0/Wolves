@@ -1733,7 +1733,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 4
   distanceToLinePickup: 1.25
-  maxPolesCount: 1
+  maxPolesCount: 2
+  maxWireLength: 5
   lineStart: {fileID: 3800795418981816800, guid: 992872b1e1271b3499ba6c496ecb1fde, type: 3}
 --- !u!54 &1281275708
 Rigidbody:
@@ -2549,7 +2550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3813022620890052974, guid: 5e15b28efdf5e794b9a540a1ccb086ce, type: 3}
       propertyPath: deprecatedRandomMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
