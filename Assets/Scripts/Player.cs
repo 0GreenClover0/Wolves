@@ -19,13 +19,16 @@ public class Player : MonoBehaviour
     private List<GameObject> poles; // <---- polaki biedaki, specjalnie z malej
 
     private List<Renderer> poleRenderers;
-    private LineRenderer lineRenderer;
+    private List<LineRenderer> lineRenderer;
     private MaterialPropertyBlock lineMaterialPropertyBlock;
     private new Rigidbody rigidbody;
     private float horizontal;
     private float vertical;
 
-    private bool HasLine => poles.Count > 0;
+    private int currentPoleStreak = 0;
+
+
+    private bool HasLine { get { return currentPoleStreak > 0; }}
 
     private LayerMask enemyLayer;
 
@@ -36,7 +39,10 @@ public class Player : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
-        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer = new List<LineRenderer>
+        {
+            GetComponent<LineRenderer>()
+        };
         poles = new List<GameObject>();
         poleRenderers = new List<Renderer>();
     }
@@ -61,8 +67,8 @@ public class Player : MonoBehaviour
                 lineVertices[i] = poles[i].transform.position;
             }
             lineVertices[poles.Count] = transform.position;
-            lineRenderer.positionCount = poles.Count + 1;
-            lineRenderer.SetPositions(lineVertices);
+            lineRenderer[0].positionCount = poles.Count + 1;
+            lineRenderer[0].SetPositions(lineVertices);
             for(int i = 0; i < poles.Count; i++)
             {
                 if (i == poles.Count - 1)
@@ -94,6 +100,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
 
+
         if (HasLine)
         {
             Vector2 linePos = new Vector2(poles[poles.Count-1].transform.position.x, poles[poles.Count - 1].transform.position.z);
@@ -110,6 +117,17 @@ public class Player : MonoBehaviour
             poleRenderers[poleRenderers.Count-1].SetPropertyBlock(lineMaterialPropertyBlock);
         }
 
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if(currentPoleStreak > 0)
+            {
+                currentPoleStreak = 0;
+                // deletes line vertex that represents player position
+                lineRenderer[0].positionCount = poles.Count;
+            }
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (HasLine)
@@ -124,6 +142,7 @@ public class Player : MonoBehaviour
 
                     poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
                     poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
+                    currentPoleStreak++;
                     return;
                 }
 
@@ -131,6 +150,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                currentPoleStreak++;
                 poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
                 poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
@@ -139,7 +159,7 @@ public class Player : MonoBehaviour
 
     public void DestroyAllPoles()
     {
-        lineRenderer.positionCount = 1;
+        lineRenderer[0].positionCount = 1;
 
         for (int i = poles.Count - 1; i >= 0; --i)
         {
@@ -152,7 +172,7 @@ public class Player : MonoBehaviour
 
     private void DestroyLastPole()
     {
-        lineRenderer.positionCount = poles.Count;
+        lineRenderer[0].positionCount = poles.Count;
         Destroy(poles[poles.Count - 1]);
         poles.RemoveAt(poles.Count - 1);
         poleRenderers.RemoveAt(poleRenderers.Count - 1);
