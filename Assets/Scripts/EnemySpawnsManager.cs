@@ -9,6 +9,11 @@ public class EnemySpawnsManager : MonoBehaviour
 {
     public bool deprecatedRandomMode = false;
 
+    public List<Sheep> Sheeps
+    {
+        get => sheeps;
+    }
+
     public event Action OnDone;
 
     [SerializeField] private List<Spawner> spawners = new List<Spawner>();
@@ -16,12 +21,14 @@ public class EnemySpawnsManager : MonoBehaviour
     [HideInInspector] public bool isDone = false;
 
     private List<EnemySpawner> enemySpawners = new List<EnemySpawner>();
+    private List<Sheep> sheeps = new List<Sheep>();
 
     private int randomOffset = 0;
 
     private void Awake()
     {
         enemySpawners = GetComponentsInChildren<EnemySpawner>(true).ToList();
+        sheeps = GetComponentsInChildren<Sheep>(true).ToList();
 
         if (deprecatedRandomMode)
         {

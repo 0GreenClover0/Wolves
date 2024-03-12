@@ -222,7 +222,7 @@ public class Player : MonoBehaviour
         while (pole != null)
         {
             Pole nextPole = pole.nextPole;
-            Destroy(pole.gameObject);
+            DestroyImmediate(pole.gameObject);
             pole = nextPole;
         }
     }
@@ -233,11 +233,16 @@ public class Player : MonoBehaviour
 
         for (int i = poles.Count - 1; i >= 0; --i)
         {
-            Destroy(poles[i]);
+            DestroyImmediate(poles[i]);
         }
 
         poles.Clear();
         poleRenderers.Clear();
+
+        for (int i = disattachedStartingPoles.Count - 1; i >= 0; --i)
+        {
+            DestroyFreestandingPoles(disattachedStartingPoles[i]);
+        }
     }
 
     private void DestroyLastPole()

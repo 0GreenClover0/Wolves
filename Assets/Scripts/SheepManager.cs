@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class SheepManager : MonoBehaviour
     public GameObject end;
 
     public static SheepManager instance;
-    public List<Sheep> sheeps = new List<Sheep>();
+    [NonSerialized] public List<Sheep> sheeps = new List<Sheep>();
 
     private void Awake()
     {
@@ -23,7 +24,7 @@ public class SheepManager : MonoBehaviour
                 sheeps.RemoveAt(i);
         }
 
-        if (sheeps.Count == 0)
+        if (sheeps.Count == 0 && LevelManager.instance.levelIsRunning)
         {
             end.SetActive(true);
 
@@ -40,4 +41,12 @@ public class SheepManager : MonoBehaviour
         Destroy(sheep.gameObject);
     }
 
+    public static void RemoveSheeps()
+    {
+        for (int i = instance.sheeps.Count - 1; i >= 0; --i)
+        {
+            Destroy(instance.sheeps[i].gameObject);
+            instance.sheeps.RemoveAt(i);
+        }
+    }
 }
