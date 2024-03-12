@@ -7,7 +7,10 @@ public class Player : MonoBehaviour
 {
     public float runSpeed = 20.0f;
     public float distanceToLinePickup = 5.0f;
-    public int maxPolesCount = 1;
+    public int maxPolesCount = 2;
+    public float maxWireLength = 5.0f;
+
+    private float usedWireLength = 0.0f;
 
     [Header("References")]
     public GameObject lineStart;
@@ -40,7 +43,15 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
+        CalculateUsedWireLength();
+        if(usedWireLength < maxWireLength)
+        {
+            rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
+        }
+        else
+        {
+            rigidbody.velocity = -rigidbody.velocity;
+        }
 
         if (HasLine)
         {
@@ -145,5 +156,20 @@ public class Player : MonoBehaviour
         Destroy(poles[poles.Count - 1]);
         poles.RemoveAt(poles.Count - 1);
         poleRenderers.RemoveAt(poleRenderers.Count - 1);
+    }
+
+    private void CalculateUsedWireLength(){
+        usedWireLength = 0.0f;
+        for(int i = 0; i < poles.Count; i++)
+        {
+            if (i == poles.Count - 1)
+            {
+                usedWireLength += Vector3.Distance(poles[i].transform.position, transform.position);
+            }
+            else
+            {
+                usedWireLength += Vector3.Distance(poles[i].transform.position, poles[i + 1].transform.position);
+            }
+        }
     }
 }
