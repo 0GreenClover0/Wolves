@@ -44,13 +44,27 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         CalculateUsedWireLength();
-        if(usedWireLength < maxWireLength)
+        if (usedWireLength < maxWireLength)
         {
             rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
         }
         else
         {
-            rigidbody.velocity = -rigidbody.velocity;
+            Vector3 desiredVelocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
+            Vector3 lastPolePosition = poles[poles.Count - 1].transform.position;
+            Vector3 directionTowardsLastPole = lastPolePosition - transform.position;
+
+            if (Mathf.Sign(desiredVelocity.x) != Mathf.Sign(directionTowardsLastPole.x))
+            {
+                desiredVelocity.x = 0.0f;
+            }
+
+            if (Mathf.Sign(desiredVelocity.z) != Mathf.Sign(directionTowardsLastPole.z))
+            {
+                desiredVelocity.z = 0.0f;
+            }
+
+            rigidbody.velocity = desiredVelocity;
         }
 
         if (HasLine)
