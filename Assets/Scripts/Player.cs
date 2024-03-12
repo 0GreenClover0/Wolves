@@ -162,8 +162,13 @@ public class Player : MonoBehaviour
             // Cut
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (poles.Count <= 1)
+                if (poles.Count < 1)
                     return;
+
+                if (poles.Count == 1)
+                {
+                    SpawnNextPole();
+                }
 
                 lineRenderer.positionCount = 1;
 
@@ -188,10 +193,7 @@ public class Player : MonoBehaviour
                     if (poles.Count >= maxPolesCount)
                         return;
 
-                    Pole previousPole = poles[poles.Count - 1].GetComponent<Pole>();
-                    poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
-                    previousPole.nextPole = poles[poles.Count - 1].GetComponent<Pole>();
-                    poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
+                    SpawnNextPole();
                     return;
                 }
 
@@ -203,6 +205,14 @@ public class Player : MonoBehaviour
                 poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
         }
+    }
+
+    private void SpawnNextPole()
+    {
+        Pole previousPole = poles[poles.Count - 1].GetComponent<Pole>();
+        poles.Add(Instantiate(lineStart, transform.position, Quaternion.identity));
+        previousPole.nextPole = poles[poles.Count - 1].GetComponent<Pole>();
+        poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
     }
 
     private void DestroyFreestandingPoles(Pole pole)
