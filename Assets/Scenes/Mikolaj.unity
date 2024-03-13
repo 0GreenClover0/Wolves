@@ -1621,8 +1621,10 @@ MonoBehaviour:
   runSpeed: 4
   distanceToLinePickup: 1.25
   maxPolesCount: 2
+  maxDisattachedPoles: 3
   maxWireLength: 5
   lineStart: {fileID: 3800795418981816800, guid: 992872b1e1271b3499ba6c496ecb1fde, type: 3}
+  error: {fileID: 8300000, guid: e7fa2eb3ff090a448bc164d397590e4e, type: 3}
 --- !u!54 &1281275708
 Rigidbody:
   m_ObjectHideFlags: 0

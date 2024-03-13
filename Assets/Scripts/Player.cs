@@ -8,12 +8,14 @@ public class Player : MonoBehaviour
     public float runSpeed = 20.0f;
     public float distanceToLinePickup = 5.0f;
     public int maxPolesCount = 2;
+    public int maxDisattachedPoles = 3;
     public float maxWireLength = 5.0f;
 
     private float usedWireLength = 0.0f;
 
     [Header("References")]
     public GameObject lineStart;
+    [SerializeField] private AudioClip error;
 
     private GameObject currentLineStart;
     private List<GameObject> poles = new List<GameObject>();
@@ -164,6 +166,12 @@ public class Player : MonoBehaviour
             {
                 if (poles.Count < 1)
                     return;
+
+                if (disattachedStartingPoles.Count >= maxDisattachedPoles)
+                {
+                    AudioSource.PlayClipAtPoint(error, Camera.main.transform.position, 5.0f);
+                    return;
+                }
 
                 if (poles.Count == 1)
                 {
