@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
         {
             // Move towards the end using NavMesh
             stolenSheep.transform.position = new Vector3(transform.position.x, ExitPoint.instance.transform.position.y, transform.position.z) + Vector3.Normalize(ExitPoint.instance.transform.position - transform.position) * 0.5f;
-            if(Vector3.Distance(transform.position, ExitPoint.instance.transform.position) < distanceToKill)
+            if(Vector3.Distance(transform.position, ExitPoint.instance.getClosestExitPoint(transform.position)) < distanceToKill)
             {
                 SheepManager.KillSheep(stolenSheep);
                 stolenSheep = null;
@@ -35,6 +35,14 @@ public class Enemy : MonoBehaviour
         else
         {
             Sheep closestSheep = SheepManager.instance.sheeps[0];
+            for(int i = 0; i< SheepManager.instance.sheeps.Count; i++)
+            {
+                if (SheepManager.instance.sheeps[i].doShit == true)
+                {
+                    closestSheep = SheepManager.instance.sheeps[i];
+                    break;
+                }
+            }
             float shortestDistance = Vector3.Distance(transform.position, closestSheep.transform.position);
 
             // Find the closest sheep
@@ -58,7 +66,7 @@ public class Enemy : MonoBehaviour
                 isHoldingSheep = true;
                 stolenSheep = closestSheep;
                 stolenSheep.DeactivateSheep();
-                agent.SetDestination(new Vector3(ExitPoint.instance.transform.position.x, transform.position.y, ExitPoint.instance.transform.position.z));
+                agent.SetDestination(new Vector3(ExitPoint.instance.getClosestExitPoint(transform.position).x, transform.position.y, ExitPoint.instance.getClosestExitPoint(transform.position).z));
                 
             }
         }

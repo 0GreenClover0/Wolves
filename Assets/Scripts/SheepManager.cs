@@ -41,10 +41,6 @@ public class SheepManager : MonoBehaviour
         Destroy(sheep.gameObject);
     }
 
-    public static void CatchSheep(Sheep sheep)
-    {
-        
-    }
 
     public static void RemoveSheeps()
     {
