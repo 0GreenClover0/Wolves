@@ -1529,7 +1529,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "SPACE - Postaw s\u0142upek\nE - Sko\u0144cz ustawianie p\u0142otka\nSHIFT
-    - Wskocz na owc\u0119 :)\nH - schowaj instrukcje"
+    - Wskocz na owc\u0119 :)\nH - Schowaj instrukcje"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1631,12 +1631,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952096216}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1793733031}
+  m_Father: {fileID: 348314390}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2516,7 +2516,7 @@ MonoBehaviour:
   lineStart: {fileID: 3800795418981816800, guid: 992872b1e1271b3499ba6c496ecb1fde, type: 3}
   error: {fileID: 8300000, guid: e7fa2eb3ff090a448bc164d397590e4e, type: 3}
   sheepSpeedMultiplier: 1.5
-  saddleTime: 2
+  saddleTime: 4
   saddleCoolDown: 5
   UI: {fileID: 1793733030}
 --- !u!54 &1281275708
@@ -3126,6 +3126,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 445545914926867756, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1793733031}
+    - targetCorrespondingSourceObject: {fileID: 445545914926867756, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 952096217}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
 --- !u!4 &1586393288 stripped
@@ -3417,7 +3420,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 950688881}
-  - {fileID: 952096217}
   m_Father: {fileID: 348314390}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4064,11 +4066,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[1].spawnTimes.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[2].spawnTimes.Array.size
@@ -4088,7 +4090,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.data[2]
-      value: 13
+      value: 15.3
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.data[3]
@@ -4108,7 +4110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[1].spawnTimes.Array.data[2]
-      value: 14.8
+      value: 20.8
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[1].spawnTimes.Array.data[3]
@@ -4132,7 +4134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[2].spawnTimes.Array.data[2]
-      value: 12.9
+      value: 16.3
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[2].spawnTimes.Array.data[3]
@@ -4156,7 +4158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[3].spawnTimes.Array.data[3]
-      value: 23.3
+      value: 22.1
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[3].spawnTimes.Array.data[4]
