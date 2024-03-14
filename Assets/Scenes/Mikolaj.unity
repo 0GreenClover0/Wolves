@@ -2805,19 +2805,19 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
       insertIndex: 0
-      addedObject: {fileID: 1326009681}
-    - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
-      insertIndex: 1
       addedObject: {fileID: 57661457}
     - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
-      insertIndex: 2
+      insertIndex: 1
       addedObject: {fileID: 324491040}
     - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
-      insertIndex: 3
+      insertIndex: 2
       addedObject: {fileID: 823862758}
     - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
-      insertIndex: 4
+      insertIndex: 3
       addedObject: {fileID: 855064964}
+    - targetCorrespondingSourceObject: {fileID: 8363319244335228127, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1326009681}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cc8c3c722148274fb8c264d53e9bda0, type: 3}
 --- !u!4 &1586393288 stripped
@@ -3723,15 +3723,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[1].spawnTimes.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
-      propertyPath: spawners.Array.data[2].spawnTimes.Array.size
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
+      propertyPath: spawners.Array.data[2].spawnTimes.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[3].spawnTimes.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.data[0]
