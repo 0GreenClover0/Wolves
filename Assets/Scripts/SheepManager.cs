@@ -12,7 +12,6 @@ public class SheepManager : MonoBehaviour
     public static SheepManager instance;
     [NonSerialized] public List<Sheep> sheeps = new List<Sheep>();
     public Player player;
-
     public TextMeshProUGUI sheepCountText;
 
     private void Awake()
