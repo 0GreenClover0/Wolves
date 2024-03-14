@@ -1707,6 +1707,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 575896959}
     - target: {fileID: 99688019723139112, guid: 4bc50cdcd1360d0408d9abd7ea5bcf2d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1281275707}
+    - target: {fileID: 99688019723139112, guid: 4bc50cdcd1360d0408d9abd7ea5bcf2d, type: 3}
       propertyPath: sheeps.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -2232,6 +2236,9 @@ MonoBehaviour:
   maxWireLength: 5
   lineStart: {fileID: 3800795418981816800, guid: 992872b1e1271b3499ba6c496ecb1fde, type: 3}
   error: {fileID: 8300000, guid: e7fa2eb3ff090a448bc164d397590e4e, type: 3}
+  sheepSpeedMultiplier: 1.5
+  saddleTime: 2
+  saddleCoolDown: 5
 --- !u!54 &1281275708
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3712,19 +3719,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[1].spawnTimes.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
-      propertyPath: spawners.Array.data[2].spawnTimes.Array.size
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
+      propertyPath: spawners.Array.data[2].spawnTimes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[3].spawnTimes.Array.size
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5444884635661034013, guid: 3da5685f5a5c22f44a05e29abb0fae80, type: 3}
       propertyPath: spawners.Array.data[0].spawnTimes.Array.data[0]

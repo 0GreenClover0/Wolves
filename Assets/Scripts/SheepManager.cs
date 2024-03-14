@@ -10,6 +10,7 @@ public class SheepManager : MonoBehaviour
 
     public static SheepManager instance;
     [NonSerialized] public List<Sheep> sheeps = new List<Sheep>();
+    public Player player;
 
     private void Awake()
     {
@@ -50,4 +51,20 @@ public class SheepManager : MonoBehaviour
             instance.sheeps.RemoveAt(i);
         }
     }
+
+    public Sheep findSheepToSaddle(Vector3 position)
+    {
+        for(int i = 0; i < instance.sheeps.Count; ++i)
+        {
+            if (instance.sheeps[i].doShit == true)
+            {
+                if(Vector3.Distance(position, instance.sheeps[i].transform.position) < 1.0f)
+                {
+                    return instance.sheeps[i];
+                }
+            }
+        }
+        return null;
+    }
+
 }

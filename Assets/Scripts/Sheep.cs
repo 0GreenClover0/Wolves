@@ -13,7 +13,9 @@ public class Sheep : MonoBehaviour
     private Vector3 centerPosition;
     private BoxCollider boxCollider;
 
+
     public bool doShit = true;
+    private bool isSaddled = false;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,10 @@ public class Sheep : MonoBehaviour
                 GoBackToCenter();
             }
         }
+        if(isSaddled)
+        {
+            transform.position = new Vector3(SheepManager.instance.player.transform.position.x, transform.position.y, SheepManager.instance.player.transform.position.z);
+        }
     }
 
     private IEnumerator MoveToRandomLocation()
@@ -60,7 +66,11 @@ public class Sheep : MonoBehaviour
                 agent.SetDestination(hit.position);
 
                 // Wait for the agent to reach the destination
-                yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance < 0.1f);
+                if(agent.isActiveAndEnabled)
+                {
+                    yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance < 0.1f);
+
+                }
 
                 // Wait for a random duration before selecting a new destination
                 yield return new WaitForSeconds(Random.Range(minWaitTime, maxWaitTime));
@@ -91,9 +101,14 @@ public class Sheep : MonoBehaviour
         agent.enabled = true;
         doShit = true;
         boxCollider.enabled = true;
+        isSaddled = false;
         GoBackToCenter();
     }
 
-
+    internal void Saddle()
+    {
+        DeactivateSheep();
+        isSaddled = true;
+    }
 
 }
