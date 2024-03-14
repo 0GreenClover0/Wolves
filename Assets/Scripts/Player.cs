@@ -45,8 +45,9 @@ public class Player : MonoBehaviour
     private float saddleCoolDown = 5.0f;
     private float saddlecoolDownTimer = 0.0f;
     private Sheep saddledSheep;
-    
 
+    [Header("UI")]
+    public GameObject UI;
 
 
     private void Start()
@@ -178,6 +179,8 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+        if(Input.GetKeyDown(KeyCode.H))
+            UI.active = !UI.active;
 
         if (HasLine)
         {
@@ -254,16 +257,23 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) && !isRiding && saddlecoolDownTimer >= saddleCoolDown)
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !isRiding)
         {
-            Sheep sheep = SheepManager.instance.findSheepToSaddle(transform.position);
-            if (sheep != null)
+            if(saddlecoolDownTimer >= saddleCoolDown)
             {
-                transform.position = sheep.transform.position;
-                sheep.Saddle();
-                saddledSheep = sheep;
-                isRiding = true;
-                saddlecoolDownTimer = 0.0f;
+                Sheep sheep = SheepManager.instance.findSheepToSaddle(transform.position);
+                if (sheep != null)
+                {
+                    transform.position = sheep.transform.position;
+                    sheep.Saddle();
+                    saddledSheep = sheep;
+                    isRiding = true;
+                    saddlecoolDownTimer = 0.0f;
+                }
+            }
+            else
+            {
+                AudioSource.PlayClipAtPoint(error, Camera.main.transform.position, 5.0f);
             }
         }
 
