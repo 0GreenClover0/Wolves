@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,8 @@ public class SheepManager : MonoBehaviour
     public static SheepManager instance;
     [NonSerialized] public List<Sheep> sheeps = new List<Sheep>();
     public Player player;
+
+    public TextMeshProUGUI sheepCountText;
 
     private void Awake()
     {
@@ -34,6 +37,7 @@ public class SheepManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+        sheepCountText.text = "Sheep: " + sheeps.Count;
     }
 
     public static void KillSheep(Sheep sheep)
