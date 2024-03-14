@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,6 +57,7 @@ public class Player : MonoBehaviour
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.material.SetColor("_Color", Color.grey);
     }
 
     private void FixedUpdate()
@@ -213,6 +215,9 @@ public class Player : MonoBehaviour
 
                 Pole firstPole = poles[0].GetComponent<Pole>();
                 firstPole.lineRenderer.enabled = true;
+                firstPole.lineRenderer.material.SetColor("_Color", Color.magenta);
+                
+
                 disattachedStartingPoles.Add(firstPole);
 
                 poles.Clear();
@@ -229,14 +234,18 @@ public class Player : MonoBehaviour
 
                 if (Vector2.Distance(linePos, playerPos) > distanceToLinePickup)
                 {
-                    if (poles.Count >= maxPolesCount)
+                    /*if (poles.Count >= maxPolesCount)
                         return;
 
                     SpawnNextPole();
-                    return;
+                    return;*/
                 }
-
-                DestroyLastPole();
+                else
+                {
+                    DestroyLastPole();
+                }
+                
+                
             }
             else
             {
