@@ -29,9 +29,24 @@ public class Player : MonoBehaviour
     private float horizontal;
     private float vertical;
 
+    private bool isRiding = false;
+    [SerializeField]
+    private float sheepSpeedMultiplier = 2.0f;
     private bool HasLine => poles.Count > 0;
 
     private LayerMask enemyLayer;
+
+    [Header("Saddling")]
+    [SerializeField]
+    private float saddleTime = 1.5f; //time in seconds
+    private float saddleTimer = 0.0f;
+    [SerializeField]
+    private float saddleCoolDown = 5.0f;
+    private float saddlecoolDownTimer = 0.0f;
+    private Sheep saddledSheep;
+    
+
+
 
     private void Start()
     {
@@ -116,7 +131,14 @@ public class Player : MonoBehaviour
 
         if (usedWireLength < maxWireLength)
         {
-            rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
+            if (isRiding)
+            {
+                rigidbody.velocity = new Vector3(horizontal * runSpeed * sheepSpeedMultiplier, 0.0f, vertical * runSpeed * sheepSpeedMultiplier);
+            }
+            else
+            {
+                rigidbody.velocity = new Vector3(horizontal * runSpeed, 0.0f, vertical * runSpeed);
+            }
         }
         else
         {
@@ -142,7 +164,16 @@ public class Player : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
+        if (!isRiding)
+        {
+            saddlecoolDownTimer += Time.deltaTime;
+        }
 
+        if(isRiding)
+        {
+            saddleTimer += Time.deltaTime;
+        }
+        
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
 
@@ -213,7 +244,29 @@ public class Player : MonoBehaviour
                 poleRenderers.Add(poles[poles.Count - 1].GetComponent<Renderer>());
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !isRiding && saddlecoolDownTimer >= saddleCoolDown)
+        {
+            Sheep sheep = SheepManager.instance.findSheepToSaddle(transform.position);
+            if (sheep != null)
+            {
+                transform.position = sheep.transform.position;
+                sheep.Saddle();
+                saddledSheep = sheep;
+                isRiding = true;
+                saddlecoolDownTimer = 0.0f;
+            }
+        }
+
+        if(saddleTime <= saddleTimer && isRiding)
+        {
+            saddleTimer = 0.0f;
+            isRiding = false;
+            saddledSheep.ReactivateSheep();
+            saddledSheep = null;
+        }
     }
+
 
     private void SpawnNextPole()
     {

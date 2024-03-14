@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
             for (int i = 1; i < SheepManager.instance.sheeps.Count; i++)
             {
                 float distanceToSheep = Vector3.Distance(transform.position, SheepManager.instance.sheeps[i].transform.position);
-                if (distanceToSheep < shortestDistance)
+                if (distanceToSheep < shortestDistance && SheepManager.instance.sheeps[i].doShit == true)
                 {
                     closestSheep = SheepManager.instance.sheeps[i];
                     shortestDistance = distanceToSheep;
