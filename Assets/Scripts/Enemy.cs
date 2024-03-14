@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
                 SheepManager.KillSheep(stolenSheep);
                 stolenSheep = null;
                 isHoldingSheep = false;
+                Destroy(gameObject);
             }
             return;
         }
