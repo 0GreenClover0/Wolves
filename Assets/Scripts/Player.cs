@@ -53,7 +53,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>(); 
-
+        rigidbody.freezeRotation = true;
+        
         enemyLayer = LayerMask.GetMask("Enemy");
 
         lineMaterialPropertyBlock = new MaterialPropertyBlock();

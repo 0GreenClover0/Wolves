@@ -11,7 +11,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene 1.unity
     guid: 3e13282ff4730f94a847efc4447c9d83
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene 2.unity
     guid: b4851ea11d7f04344bf7ef42c2b10a75
+  - enabled: 1
+    path: Assets/Scenes/Mikolaj.unity
+    guid: 514ffa8245024ba4e90be1434db4a4f6
   m_configObjects: {}
